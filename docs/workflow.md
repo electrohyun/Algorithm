@@ -51,7 +51,8 @@ function solution(input) {
 4. Day 번호는 기존 daily report 개수를 보고 자동 계산합니다.
 5. 오늘 리포트 맨 아래에 문제 md 내용을 그대로 붙입니다.
 6. 같은 문제 섹션이 이미 있으면 중복 추가하지 않습니다.
-7. 커밋/푸시는 하지 않습니다.
+7. `bash scripts/status.sh`를 실행해 `README.md`의 공부 현황(연속 일수·최근 기록)을 갱신합니다.
+8. 커밋/푸시는 하지 않습니다.
 
 예시:
 
@@ -73,3 +74,4 @@ function solution(input) {
 - 방금 만든 문제 파일이 불분명하면 마무리 전에 어떤 md 파일을 붙일지 사용자에게 확인합니다.
 - daily report에는 문제 md 내용을 수정하지 않고 그대로 복사합니다.
 - README나 daily report 갱신만으로 커밋하거나 푸시하지 않습니다.
+- 공부 현황은 `scripts/status.sh`가 `README.md`의 `<!-- STATUS:START --> ~ END -->` 구간을 자동 갱신합니다. 이 구간은 손으로 고치지 않습니다.

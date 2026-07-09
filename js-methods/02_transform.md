@@ -1,0 +1,184 @@
+# JS 손풀기 Day2 변환 3대장 (map / filter / reduce)
+
+변환 3대장이라고 썼지만 for of, for in, foreach의 차이에 대해서도 공부했다. 모르는 걸 알아가는 과정이 즐거운 요즘.
+
+## 문제
+
+```ts
+// ── 드릴 1) 각 수를 2배로.  [1,2,3]  ->  [2,4,6] ──
+function d1_for(arr) {
+  // TODO: for...of 로. (const result=[]; 돌면서 result.push(x*2); return result;)
+
+  const result = [];
+
+  for (const element of arr) {
+    result.push(element * 2);
+  }
+
+  return result;
+}
+function d1_method(arr) {
+  return arr.map((item) => item * 2);
+}
+
+// ── 드릴 2) 각 수를 제곱으로.  [1,2,3,4]  ->  [1,4,9,16] ──
+function d2_for(arr) {
+  const result = [];
+
+  for (const element of arr) {
+    result.push(element * element);
+  }
+
+  return result;
+}
+function d2_method(arr) {
+  return arr.map((item) => item * item);
+}
+
+// ── 드릴 3) 짝수만 남겨라.  [1,2,3,4,5,6]  ->  [2,4,6] ──
+function d3_for(arr) {
+  const result = [];
+
+  for (const element of arr) {
+    if (element % 2 !== 0) continue;
+
+    result.push(element);
+  }
+
+  return result;
+}
+function d3_method(arr) {
+  return arr.filter((item) => item % 2 === 0);
+}
+
+// ── 드릴 4) 3보다 큰 것만.  [1,5,2,8,3,9]  ->  [5,8,9] ──
+function d4_for(arr) {
+  const result = [];
+
+  for (const element of arr) {
+    if (element <= 3) continue;
+
+    result.push(element);
+  }
+
+  return result;
+}
+function d4_method(arr) {
+  return arr.filter((item) => item > 3);
+}
+
+// ── 드릴 5) 전부 더한 합.  [1,2,3,4,5]  ->  15 ──
+function d5_for(arr) {
+  let result = 0;
+
+  for (const element of arr) {
+    result += element;
+  }
+
+  return result;
+}
+function d5_method(arr) {
+  return arr.reduce((acc, item) => acc + item, 0);
+}
+
+// ── 드릴 6) 최댓값.  [3,1,4,1,5,9,2,6]  ->  9 ──
+function d6_for(arr) {
+  let max = 0;
+
+  for (const element of arr) {
+    if (element > max) max = element;
+  }
+
+  return max;
+}
+function d6_method(arr) {
+  return arr.reduce((acc, item) => Math.max(acc, item), arr[0]);
+}
+
+// ── 드릴 7) 짝수만 골라 2배.  [1,2,3,4,5,6]  ->  [4,8,12] ──
+function d7_for(arr) {
+  const result = [];
+
+  for (const element of arr) {
+    if (element % 2 === 0) result.push(element * 2);
+  }
+
+  return result;
+}
+function d7_method(arr) {
+  return arr.filter((item) => item % 2 === 0).map((item) => item * 2);
+}
+
+// ── 드릴 8) 짝수의 "개수".  [1,2,3,4,5,6]  ->  3 ──
+function d8_for(arr) {
+  let result = 0;
+
+  for (const element of arr) {
+    if (element % 2 === 0) result++;
+  }
+
+  return result;
+}
+function d8_method(arr) {
+  return arr.filter((item) => item % 2 === 0).length;
+}
+
+// ── 드릴 9) 빈도 세기(객체).  ["a","b","a","c","a"]  ->  {a:3,b:1,c:1} ──
+function d9_for(arr) {
+  const result = {};
+
+  for (const element of arr) {
+    if (!result[element]) result[element] = 1;
+    else result[element] += 1;
+  }
+
+  return result;
+}
+function d9_method(arr) {
+  // 틀림 ㅠㅠ
+  return arr.reduce((acc, item) => {
+    acc[item] ? (acc[item] += 1) : (acc[item] = 1);
+    return acc;
+  }, {});
+}
+
+// ── 드릴 10) 종합: "1 2 3 4 5 6" -> 홀수만 골라 제곱해서 합 -> 35 ──
+//   (1 + 9 + 25 = 35)
+function d10_for(raw) {
+  let result = 0;
+
+  for (const element of raw) {
+    if (element % 2 === 0) continue;
+
+    result += element * element;
+  }
+
+  return result;
+}
+function d10_method(raw) {
+  return raw
+    .split(" ") // split 깜빡함
+    .filter((item) => item % 2 !== 0)
+    .map((item) => item * item)
+    .reduce((acc, item) => acc + item, 0);
+}
+```
+
+## 회고
+
+오늘의 발견:
+
+- reduce 사용법 제대로 알았다. 항상 축소한다는게 무슨 소린지 이해를 못했는데, 축적하다, 하나로 축소한다고 받아들이게 되었다.
+- map, filter 쉽다.
+
+잘한 점:
+
+- 어제는 왕창 틀렸는데 역시 이전에 해본 것들이라 단 1개 빼고는 잘 풀었다.
+
+불확실한 점:
+
+- 1일차의 split 틀린게 마음에 걸린다. 실전에서는 이런거 바로바로 튀어나와야 한다. 한주 리캡할때 반드시 더더 풀어보려고 한다.
+
+내일부터:
+
+- 내일 일자거 잘 풀자. 재밌다.

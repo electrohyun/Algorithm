@@ -1,0 +1,109 @@
+# JS 손풀기 Day6 총복습 (틀렸던 것만 10선)
+
+- JS 감잡기 마지막 날. 새 개념 없이, Day1~5 에서 실제로 틀렸던 지점만 저격한 드릴 10개
+
+## 저격한 틀린 지점 (Day1~5)
+
+| 드릴   | 출처 | 함정                                | 되짚을 포인트                                                        |
+| ------ | ---- | ----------------------------------- | -------------------------------------------------------------------- |
+| d1     | Day1 | 배열에 `trim`                       | `trim` 은 문자열 전용. `raw.trim().split(" ").map(Number)`           |
+| d2     | Day1 | split 결과는 배열 / map은 함수 인자 | `.split(",").map(Number).reduce(...)`                                |
+| d3     | Day2 | 빈도 세기 reduce                    | 콜백서 `return acc` + 함수서 `return`. `acc[k]=(acc[k]??0)+1`        |
+| d4     | Day3 | `includes` 에 콜백                  | `includes` 는 값을 받는다. 콜백은 `some`                             |
+| d5     | Day4 | `push` 반환값                       | push 는 길이 반환. 새 배열은 `[...arr, x]`                           |
+| d6     | Day5 | Set `new`                           | 중복 제거 후 배열로: `[...new Set(arr)]`                             |
+| d7     | Day5 | filter 체이닝                       | `filter((v,i)=>arr.indexOf(v)===i).length` (인덱스는 인덱스끼리!)    |
+| d8     | Day5 | 교집합 has                          | `const set=new Set(b); a.filter(x=>set.has(x))`                      |
+| **d9** | Day5 | ⭐첫 중복                           | `seen` 빈 통 → `has` 조회 → `add`. Set엔 `indexOf` 없음              |
+| d10    | Day5 | 빈도 내림차순                       | `Object.entries` 배열화 → `sort((a,b)=>b[1]-a[1])` → `.map(e=>e[0])` |
+
+## 문제
+
+```ts
+// ── d1) "  10 20 30  "  ->  [10, 20, 30] ──
+function d1(raw) {
+  return raw.trim().split(" ").map(Number);
+}
+
+// ── d2) "1,2,3,4"  ->  10  (합) ──
+function d2(raw) {
+  return raw
+    .split(",")
+    .map(Number)
+    .reduce((acc, cur) => acc + cur);
+}
+
+// ── d3) ["a","b","a","c","a"]  ->  {a:3, b:1, c:1} ──
+function d3(arr) {
+  return arr.reduce((acc, cur) => {
+    acc[cur] = (acc[cur] ?? 0) + 1;
+    return acc;
+  }, {});
+}
+
+// ── d4) 배열에 target 이 있나? ──
+function d4(arr, target) {
+  return arr.includes(target);
+}
+
+// ── d5) arr 끝에 x 붙인 배열.  ([1,2], 3) -> [1,2,3] ──
+function d5(arr, x) {
+  return [...arr, x];
+}
+
+// ── d6) [1,2,2,3,3,3]  ->  [1,2,3]  (중복 제거) ──
+function d6(arr) {
+  return [...new Set(arr)];
+}
+
+// ── d7) [1,2,2,3,1]  ->  3  (고유 원소 개수, filter 체이닝) ──
+function d7(arr) {
+  return arr.filter((item, idx) => arr.indexOf(item) === idx).length;
+}
+
+// ── d8) 교집합.  ([1,2,3,4],[2,4,6])  ->  [2,4] ──
+function d8(a, b) {
+  const set = new Set(b);
+  return a.filter((item) => set.has(item));
+}
+
+// ── d9) ⭐첫 중복 원소.  [2,1,3,1,4,2]  ->  1  (없으면 -1) ──
+function d9(arr) {
+  const set = new Set();
+  for (const element of arr) {
+    if (set.has(element)) return element;
+    set.add(element);
+  }
+  return -1;
+}
+
+// ── d10) "a b a c b a"  ->  ["a","b","c"]  (빈도 내림차순 고유 문자) ──
+function d10(raw) {
+  return Object.entries(
+    raw.split(" ").reduce((acc, cur) => {
+      acc[cur] = (acc[cur] ?? 0) + 1;
+      return acc;
+    }, {}),
+  )
+    .sort((a, b) => b[1] - a[1])
+    .map((item) => item[0]);
+}
+```
+
+## 회고
+
+오늘의 발견:
+
+- 5일간의 학습 과정이 무척 도움되었다. 특히 Set이랑 map은 너무 편하다.
+
+잘한 점:
+
+- 케이스 8개를 한번에 풀었다.
+
+불확실한 점:
+
+- map의 경우 안 쓴 지 조금만 지나도 까먹었었다. 감을 잃으면 안될 것 같고, 꾸준히 노력해보려 한다.
+
+내일부터:
+
+- 쉬운 문제들을 지금까지 배웠던 JS로 풀어본다 (2일). 그리고 새로운 알고리즘 학습에 들어갈지 고민해본다!

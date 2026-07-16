@@ -13,11 +13,11 @@
 <!-- STATUS:START -->
 <!-- 이 구간은 scripts/status.sh가 자동 생성합니다. 직접 수정하지 마세요. -->
 
-## 📊 공부 현황 — 연속 7일째 🔥 순항 중
+## 📊 공부 현황 — 연속 8일째 🔥 순항 중
 
 | 연속 학습(평일) | 총 학습일 | 총 문제 | 최근 학습일 |
 | :---: | :---: | :---: | :---: |
-| **7일** | 7일 | 7개 | 2026-07-15 |
+| **8일** | 8일 | 8개 | 2026-07-16 |
 
 <details>
 <summary>문제종류별 · 최근 기록 펼쳐보기</summary>
@@ -27,21 +27,21 @@
 | 종류 | 문제 수 |
 | --- | --- |
 | BFS | 1 |
-| JS Methods | 6 |
+| JS Methods | 7 |
 
 **최근 기록**
 
 | 날짜 | 주제 | 링크 |
 | --- | --- | --- |
+| 2026-07-16 | JS 손풀기 Day7 — 프로그래머스로 전환 (문자열·정렬·구현) | [리포트](./daily-report/2026-07-16.md) |
 | 2026-07-15 | JS 손풀기 Day6 총복습 (틀렸던 것만 10선) | [리포트](./daily-report/2026-07-15.md) |
 | 2026-07-14 | JS 손풀기 Day5 해싱 (Set / Map / 객체 / 2D 배열) | [리포트](./daily-report/2026-07-14.md) |
 | 2026-07-13 | JS 손풀기 Day4 배열 조작 + 정렬 (push / shift / Array.from / fill / sort) | [리포트](./daily-report/2026-07-13.md) |
 | 2026-07-10 | JS 손풀기 Day3 탐색계 (find / findIndex / some / every / includes) | [리포트](./daily-report/2026-07-10.md) |
-| 2026-07-09 | JS 손풀기 Day2 변환 3대장 (map / filter / reduce) | [리포트](./daily-report/2026-07-09.md) |
 
 </details>
 
-<sub>🔄 마지막 갱신: 2026-07-15 12:20 · `bash scripts/status.sh`로 갱신</sub>
+<sub>🔄 마지막 갱신: 2026-07-16 12:45 · `bash scripts/status.sh`로 갱신</sub>
 <!-- STATUS:END -->
 
 ## 공부 방식

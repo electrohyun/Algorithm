@@ -13,6 +13,17 @@ cd "$(dirname "$0")/.."
 
 README="README.md"
 
+# ---- date 호환 계층 ----
+# GNU date(리눅스 / Windows Git Bash)와 BSD date(macOS)는 문법이 다르다.
+# 실제로 한 번 호출해보고 되는 쪽을 쓴다.
+if date -d "2000-01-01" +%u >/dev/null 2>&1; then
+  dow_of()   { date -d "$1" +%u; }                    # 1=월 .. 7=일
+  prev_day() { date -d "$1 - 1 day" +%Y-%m-%d; }
+else
+  dow_of()   { date -j -f "%Y-%m-%d" "$1" +%u; }
+  prev_day() { date -j -v-1d -f "%Y-%m-%d" "$1" +%Y-%m-%d; }
+fi
+
 # 문제종류 폴더명 -> 보기 좋은 라벨 (js-methods -> JS Methods, bfs -> BFS)
 # 세 글자 이하 알파벳 토큰(js, bfs, dfs, dp 등)은 약어로 보고 전부 대문자.
 label() {
@@ -57,14 +68,14 @@ latest="$(echo "$dates_desc" | head -1)"
 if [ -n "$latest" ]; then
   cur="$latest"
   while true; do
-    dow="$(date -j -f "%Y-%m-%d" "$cur" +%u 2>/dev/null)"   # 1=월 .. 7=일
+    dow="$(dow_of "$cur")"   # 1=월 .. 7=일
     if [ "$dow" -ge 6 ]; then
-      cur="$(date -j -v-1d -f "%Y-%m-%d" "$cur" +%Y-%m-%d)"
+      cur="$(prev_day "$cur")"
       continue
     fi
     if is_studied "$cur"; then
       streak=$((streak + 1))
-      cur="$(date -j -v-1d -f "%Y-%m-%d" "$cur" +%Y-%m-%d)"
+      cur="$(prev_day "$cur")"
     else
       break
     fi

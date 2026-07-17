@@ -1,0 +1,185 @@
+# JS 손풀기 Day8 — 프로그래머스 (완전탐색·그리디)
+
+- 털렸다.
+
+## 오늘 푼 문제
+
+| 문제         | Lv  | 번호  | 결과        | JS로 굳힌 것                               |
+| ------------ | --- | ----- | ----------- | ------------------------------------------ |
+| 모의고사     | 1   | 42840 | 통과        | `Math.max(...arr)` + `map`으로 인덱스→번호 |
+| 체육복       | 1   | 42862 | 통과        | 개수 배열 그리디, `reduce` vs `for` 판단   |
+| 큰 수 만들기 | 2   | 42883 | 미완 (내일) | 부분 수열 — 답은 자르는 게 아니라 쌓는 것  |
+| 카펫         | 2   | 42842 | 제외        | (시간 부족)                                |
+
+## 씨름했던 지점
+
+| 문제         | 함정                                            | 되짚을 포인트                                                      |
+| ------------ | ----------------------------------------------- | ------------------------------------------------------------------ |
+| 모의고사     | `scores`까진 갔는데 `Math.max`를 못 떠올림      | `Math.max(...arr)` 는 관용구로 통째 암기                           |
+| 모의고사     | `Math.max(arr)` 는 에러가 아니라 조용히 `NaN`   | 배열 아닌 **인자 목록**을 받는 함수 → 스프레드 필수                |
+| 모의고사     | 객체(키:값)를 만들어야 하나 고민                | 사람 번호가 1,2,3 → **인덱스 + 1** 이면 충분. 객체 불필요          |
+| 체육복       | `reduce` 초기값 누락 → 0번 학생이 순회에서 빠짐 | 초기값은 웬만하면 항상. 없으면 arr[0]이 acc, idx 1부터 시작        |
+| 체육복       | `reduce`인데 `acc`를 한 번도 안 건드림          | **`cur` 안 쓰고 `acc` 그대로 반환 → 그건 `reduce`가 아님**         |
+| 체육복       | 이웃(`idx±1`)을 수정하는 로직                   | 원소끼리 영향 주고받으면 `map` 불가 → `for`                        |
+| 체육복       | `Array.from({length:n}, () => 1)`               | 전부 같은 값이면 `fill`. 인덱스가 필요할 때만 `Array.from`         |
+| 큰 수 만들기 | `sort`로 큰 것부터 골랐음                       | 순서를 바꾸면 안 되는 **부분 수열** 문제                           |
+| 큰 수 만들기 | `Set`으로 중복 제거                             | 같은 값이라도 **자리가 다르면 다른 존재**. 값이 아니라 위치를 지움 |
+| 큰 수 만들기 | "답 = 가장 큰 숫자들의 모임" (3번 반복한 오해)  | 가치는 크기가 아니라 **위치**가 정함. 앞자리가 전부                |
+| 큰 수 만들기 | `slice` 한 번으로 답을 찾으려 함                | **정답은 연속이 아님.** 찾는 게 아니라 한 자리씩 쌓는 것           |
+| 큰 수 만들기 | 루프가 값(9→8→7…)을 돌고 있었음                 | 자리(1번째→2번째…)를 돌아야 함                                     |
+
+## 문제
+
+```js
+// ── p1) 모의고사 ──
+const firstGuy = [1, 2, 3, 4, 5];
+const secondGuy = [2, 1, 2, 3, 2, 4, 2, 5];
+const thirdGuy = [3, 3, 1, 1, 2, 2, 4, 4, 5, 5];
+
+function solution(answers) {
+  const firstGuyAnswers = answers.filter(
+    (item, idx) => item === firstGuy[idx % 5],
+  ).length;
+  const secondGuyAnswers = answers.filter(
+    (item, idx) => item === secondGuy[idx % 8],
+  ).length;
+  const thirdGuyAnswers = answers.filter(
+    (item, idx) => item === thirdGuy[idx % 10],
+  ).length;
+
+  const scores = [firstGuyAnswers, secondGuyAnswers, thirdGuyAnswers];
+  const highest = Math.max(...scores);
+
+  return scores
+    .map((score, idx) => (score === highest ? idx + 1 : null))
+    .filter((no) => no !== null);
+}
+
+// ── p2) 체육복 — 통과했으나 reduce 오용 ──
+function p2(n, lost, reserve) {
+  const trainingBok = Array.from({ length: n }, () => 1);
+
+  for (const taken of lost) {
+    trainingBok[taken - 1] = 0;
+  }
+
+  for (const yebi of reserve) {
+    trainingBok[yebi - 1] += 1;
+  }
+
+  return trainingBok
+    .reduce((acc, cur, idx) => {
+      const isHaveTrainingBok = trainingBok[idx] >= 1;
+      const isFinalStudent = idx === trainingBok.length - 1;
+
+      const isPreviousStudentHaveTrainingBok = trainingBok[idx - 1] > 1;
+
+      const isNexStudentHaveTrainingBok = trainingBok[idx + 1] > 1;
+
+      if (isHaveTrainingBok) return acc;
+
+      if (isPreviousStudentHaveTrainingBok) {
+        trainingBok[idx - 1] -= 1;
+        trainingBok[idx] = 1;
+        return acc;
+      }
+
+      if (isFinalStudent) return acc;
+
+      if (isNexStudentHaveTrainingBok) {
+        trainingBok[idx + 1] -= 1;
+        trainingBok[idx] = 1;
+        return acc;
+      }
+
+      return acc;
+    }, trainingBok)
+    .filter((item) => item >= 1).length;
+}
+
+// ── p2b) 체육복 — for 루프 버전 (같은 로직, acc 없음) ──
+function p2b(n, lost, reserve) {
+  const trainingBok = Array.from({ length: n }, () => 1);
+
+  for (const taken of lost) {
+    trainingBok[taken - 1] = 0;
+  }
+
+  for (const yebi of reserve) {
+    trainingBok[yebi - 1] += 1;
+  }
+
+  for (let idx = 0; idx < trainingBok.length; idx += 1) {
+    const isHaveTrainingBok = trainingBok[idx] >= 1;
+    const isFinalStudent = idx === trainingBok.length - 1;
+
+    const isPreviousStudentHaveTrainingBok = trainingBok[idx - 1] > 1;
+
+    const isNexStudentHaveTrainingBok = trainingBok[idx + 1] > 1;
+
+    if (isHaveTrainingBok) continue;
+
+    if (isPreviousStudentHaveTrainingBok) {
+      trainingBok[idx - 1] -= 1;
+      trainingBok[idx] = 1;
+      continue;
+    }
+
+    if (isFinalStudent) continue;
+
+    if (isNexStudentHaveTrainingBok) {
+      trainingBok[idx + 1] -= 1;
+      trainingBok[idx] = 1;
+      continue;
+    }
+  }
+
+  return trainingBok.filter((item) => item >= 1).length;
+}
+
+// ── p3) 큰 수 만들기 — 미완, 내일 이어서 ──
+// 오늘 도달한 곳:
+//   - 답 길이 = number.length - k (자리 수는 이미 정해져 있음)
+//   - 답은 부분 수열. 순서 유지, 위치를 지우는 것 (값 아님)
+//   - 답은 slice 한 번으로 안 나옴. 한 자리씩 "쌓는" 것
+//   - 첫 자리 = 어떤 "구간" 안의 최댓값 (전체 아님 — 뒤에 남을 자리가 있어야)
+//   - 최댓값이 여러 개면 가장 왼쪽 (indexOf 가 첫 위치를 줌). 뒤 선택지가 넓어져 손해 없음
+// 남은 것: 탐색 구간의 "끝"을 어떻게 잡을 것인가
+// (아래는 임계값 방식 — 전제가 틀려서 버릴 코드. 기록용)
+function p3(number, k) {
+  const targetDigit = number.length - k;
+
+  const target = Math.max(...number.split(""));
+
+  for (let i = target; i > 0; i--) {
+    const slicedNumber = number.slice(number.indexOf(i));
+
+    if (slicedNumber.length < targetDigit) {
+      continue;
+    }
+
+    if (slicedNumber.length === targetDigit) {
+      return slicedNumber;
+    }
+  }
+}
+```
+
+## 회고
+
+오늘의 발견:
+
+- 예전에 풀었던 문제로 돌아왔다. 이번에는 모르는, 어려운 문제도 하나 섞었는데, 털렸다.
+
+잘한 점:
+
+- map, filter가 손에 익는다.
+
+불확실한 점:
+
+- Math.max 사용에 있어 헷갈린 부분이 있다.
+- 큰 수 만들기의 경우 해결하지 못한 아쉬움이 남는다.
+
+내일부터:
+
+- 주말 잘 쉬고 다음주에 3단계 마저 도전, BFS/DFS 도전, 아직 모르는 유형들 1단계 위주로 공부.

@@ -1,6 +1,7 @@
-# BFS
+# 그래프 탐색 (Graph Traversal)
 
-- BFS와 짝꿍 DFS
+- BFS · DFS · (유니온파인드 등 연결요소) 통합 폴더
+- 폴더명 `bfs` → `graph` 로 변경 (BFS만 담는 게 아니라 그래프 탐색 전반)
 
 - 난이도 중하
 

@@ -1,0 +1,45 @@
+# 프로그래머스 43165
+
+## 풀이
+
+```js
+function solution(numbers, target) {
+  let answer = 0;
+
+  function dfs(idx, sum) {
+    // 끝나면... 대조해서 방법의 수+1
+    if (idx + 1 === numbers.length) {
+      if (sum === target) answer++;
+      return 0;
+    }
+
+    // 안 끝나면...
+    dfs(idx + 1, sum + numbers[idx + 1]);
+    dfs(idx + 1, sum - numbers[idx + 1]);
+  }
+
+  dfs(0, numbers[0]);
+  dfs(0, -numbers[0]);
+
+  return answer;
+}
+```
+
+오늘의 발견:
+
+- dfs를 활용해서 풀었다.
+- 그러나 어제와 달리 그래프 배열을 만드는 과정은 없었다. dfs면 이걸 외워야 하지 않을까 해서 외웠는데,
+- 그 풀이보다는 재귀 문제를 처음 배울때 썼던 방식으로 접근하니 해결할 수 있었다.
+
+잘한 점:
+
+- 도움 없이 혼자 해결했다.
+
+불확실한 점:
+
+- idx 카운팅을 어떻게 해야하는지 고민하는 시간이 길었다.
+- 필요하지 않은 변수를 선언해두었다. 재귀 문제를 더 해결하면서, 이게 필요한지 불필요한지 판단할 수 있는 능력을 성장시키고 싶다.
+
+내일부터:
+
+- BFS 도전!!

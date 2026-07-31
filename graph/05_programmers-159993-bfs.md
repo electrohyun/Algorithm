@@ -1,0 +1,155 @@
+# 프로그래머스 159993 미로 탈출
+
+## 내 풀이
+
+```js
+function findPos(maps, ch) {
+  const y = maps.findIndex((row) => row.includes(ch));
+  return [y, maps[y].indexOf(ch)]; // [y, x]
+}
+
+function solution(maps) {
+  // BFS
+
+  // 매 움직임마다 - 즉 루프 초기에 레버 건들였는지 + 출구 도착했는지 체크
+  // 이미 방문했는지 안했는지는 중요하지 않다 그러나
+  // 레버를 찾으면 visited 다시 초기화 (돌아가야 할 수 있으니)
+  // 세로 n * 가로 m
+  const [sy, sx] = findPos(maps, "S");
+  const n = maps.length;
+  const m = maps[0].length;
+  let dist = Array.from({ length: n }, () => Array(m).fill(0));
+  let queue = [[sx, sy]];
+  let answer = [];
+
+  while (queue.length > 0) {
+    let [x, y] = queue.shift();
+    if (maps[y][x] === "L") {
+      answer.push(dist[y][x]);
+    }
+
+    if (y + 1 < n && dist[y + 1][x] === 0 && maps[y + 1][x] !== "X") {
+      queue.push([x, y + 1]);
+      dist[y + 1][x] = dist[y][x] + 1;
+    }
+    if (y > 0 && dist[y - 1][x] === 0 && maps[y - 1][x] !== "X") {
+      queue.push([x, y - 1]);
+      dist[y - 1][x] = dist[y][x] + 1;
+    }
+    if (x + 1 < m && dist[y][x + 1] === 0 && maps[y][x + 1] !== "X") {
+      queue.push([x + 1, y]);
+      dist[y][x + 1] = dist[y][x] + 1;
+    }
+    if (x > 0 && dist[y][x - 1] === 0 && maps[y][x - 1] !== "X") {
+      queue.push([x - 1, y]);
+      dist[y][x - 1] = dist[y][x] + 1;
+    }
+  }
+
+  const lengthStartToLever = Math.min([...answer]);
+  answer = [];
+
+  const [ly, lx] = findPos(maps, "L");
+  dist = Array.from({ length: n }, () => Array(m).fill(0));
+  queue = [[lx, ly]];
+
+  while (queue.length > 0) {
+    let [x, y] = queue.shift();
+    if (maps[y][x] === "E") {
+      answer.push(dist[y][x]);
+    }
+
+    if (y + 1 < n && dist[y + 1][x] === 0 && maps[y + 1][x] !== "X") {
+      queue.push([x, y + 1]);
+      dist[y + 1][x] = dist[y][x] + 1;
+    }
+    if (y > 0 && dist[y - 1][x] === 0 && maps[y - 1][x] !== "X") {
+      queue.push([x, y - 1]);
+      dist[y - 1][x] = dist[y][x] + 1;
+    }
+    if (x + 1 < m && dist[y][x + 1] === 0 && maps[y][x + 1] !== "X") {
+      queue.push([x + 1, y]);
+      dist[y][x + 1] = dist[y][x] + 1;
+    }
+    if (x > 0 && dist[y][x - 1] === 0 && maps[y][x - 1] !== "X") {
+      queue.push([x - 1, y]);
+      dist[y][x - 1] = dist[y][x] + 1;
+    }
+  }
+
+  const lengthLeverToExit = Math.min([...answer]);
+
+  if (lengthStartToLever && lengthLeverToExit)
+    return lengthStartToLever + lengthLeverToExit;
+
+  return -1;
+}
+```
+
+## 리팩터링 (AI)
+
+```js
+function solution(maps) {
+  const n = maps.length;
+  const m = maps[0].length;
+  const dy = [-1, 1, 0, 0];
+  const dx = [0, 0, -1, 1];
+
+  const findPos = (ch) => {
+    const y = maps.findIndex((row) => row.includes(ch));
+    return [y, maps[y].indexOf(ch)];
+  };
+
+  const bfs = ([sy, sx], target) => {
+    const dist = Array.from({ length: n }, () => Array(m).fill(-1));
+    const queue = [[sy, sx]];
+    dist[sy][sx] = 0;
+
+    while (queue.length > 0) {
+      const [y, x] = queue.shift();
+      if (maps[y][x] === target) return dist[y][x];
+
+      for (let d = 0; d < 4; d++) {
+        const ny = y + dy[d];
+        const nx = x + dx[d];
+
+        if (ny < 0 || ny >= n || nx < 0 || nx >= m) continue;
+        if (maps[ny][nx] === "X" || dist[ny][nx] !== -1) continue;
+
+        dist[ny][nx] = dist[y][x] + 1;
+        queue.push([ny, nx]);
+      }
+    }
+
+    return -1;
+  };
+
+  const toLever = bfs(findPos("S"), "L");
+  if (toLever === -1) return -1;
+
+  const toExit = bfs(findPos("L"), "E");
+  if (toExit === -1) return -1;
+
+  return toLever + toExit;
+}
+```
+
+오늘의 발견:
+
+- bfs 한큐에 풀기 성공!
+
+잘한 점:
+
+- 어제 배운 bfs를 잘 고민해서 사용하는 데에 성공했다.
+
+불확실한 점:
+
+- Math.min 메서드를 사용할때, [...answer]처럼 인자를 넘겨주었다. ...answer가 맞다. 엄연히 틀렸다.
+- 같은 while 로직이 두 번 반복됐다. 반복되는 것은 함수로.
+- x,y 위치 찾는 로직을 기억해둘 필요가 있다. 공식처럼 외우는 게 중요하다.
+- 아직 풀이가 많이 지저분하다고 느낀다.
+
+내일부터:
+
+- 다음 주 -> bfs 한번 더(격자 아닌 bfs??)
+- 이분 탐색, 투포인터, dp 순서대로 고고

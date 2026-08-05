@@ -1,0 +1,51 @@
+# 프로그래머스 43105 정수 삼각형
+
+## 코드
+
+```js
+function solution(triangle) {
+  // const dp = [].push([]);
+  const dp = [];
+  // dp[1] = triangle[0];
+  // dp[2] = Math.max(triangle[1][0], triangle[1][1]);
+  dp[0] = [triangle[0][0]];
+
+  // for (let i = 3; i < triangle.length; i++) {
+  for (let i = 1; i < triangle.length; i++) {
+    dp[i] = [];
+    for (let j = 0; j < triangle[i].length; j++) {
+      if (j === 0) {
+        dp[i][j] = triangle[i][j] + dp[i - 1][j];
+        continue;
+      }
+      if (j === triangle[i].length - 1) {
+        dp[i][j] = triangle[i][j] + dp[i - 1][j - 1];
+        continue;
+      }
+
+      // dp[i][j] = triangle[i][j] + Math.max(dp[i - 1][j], dp[i - 1][j + 1]);
+      dp[i][j] = triangle[i][j] + Math.max(dp[i - 1][j - 1], dp[i - 1][j]);
+    }
+  }
+
+  return Math.max(...dp[triangle.length - 1]);
+}
+```
+
+오늘의 발견:
+
+- 또 다른 dp 유형 문제를 풀었다. 새로운 풀이를 알았다.
+
+잘한 점:
+
+- 접근 방식은 좋았다. 풀이 방식은 틀렸지만...
+
+불확실한 점:
+
+- 1-based 기반의 생각이 약하다. 어떻게 보완할 수 있을지 고민해보면 앞으로 더 잘 풀 수 있을 것이다.
+- dp[i] = []처럼 빈 배열 바로 넣는 방법을 몰랐다.
+- 가장 처음 발상인데, 처음부터 큰 숫자를 골라가며 내려가는 방법을 찾았다. 문제에 따르면 합이 가장 커야하지, 처음부터 큰 것만 골라간다고 정답이 아니었다. 문제를 잘 읽자.
+
+내일부터:
+
+- DP 하나 더!!

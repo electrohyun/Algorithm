@@ -25,13 +25,13 @@ else
 fi
 
 # 문제종류 폴더명 -> 보기 좋은 라벨 (js-methods -> JS Methods, bfs -> BFS)
-# 세 글자 이하 알파벳 토큰(js, bfs, dfs, dp 등)은 약어로 보고 전부 대문자.
+# JS, BFS, DFS, DP 등 약어는 대문자로 표시한다.
 label() {
   echo "$1" | awk '{
     n=split($0,a,"-"); s="";
     for(i=1;i<=n;i++){
       t=a[i];
-      if (t ~ /^[a-zA-Z]+$/ && length(t)<=3) w=toupper(t);
+      if (tolower(t) ~ /^(js|bfs|dfs|dp)$/) w=toupper(t);
       else w=toupper(substr(t,1,1)) substr(t,2);
       s=s (i>1?" ":"") w;
     }

@@ -1,0 +1,45 @@
+# LeetCode 167 Two Sum II - Input Array Is Sorted
+
+코드:
+
+```js
+/**
+ * @param {number[]} numbers
+ * @param {number} target
+ * @return {number[]}
+ */
+var twoSum = function (numbers, target) {
+  let first = 0;
+  let end = numbers.length - 1;
+
+  while (first < end) {
+    const sum = numbers[first] + numbers[end];
+
+    if (sum === target) {
+      return [first + 1, end + 1];
+    }
+
+    if (sum < target) {
+      first++;
+    } else {
+      end--;
+    }
+  }
+};
+```
+
+오늘의 발견:
+
+- 투포인터 이제 쉽다(아님)
+
+잘한 점:
+
+- 투포인터 문제 해결 방법을 알아냈다.
+
+불확실한 점:
+
+- 0번, 1번 인덱스를 first 및 end로 잡았었는데, 0번, 끝번 인덱스를 first 및 end로 잡아 푸는 것이 더 수월했을 것이다. 문제를 보고 상황에 맞춰 고르자.
+
+내일부터:
+
+- 당분간 이번 문제같이 복습위주로 진행하려고 한다.

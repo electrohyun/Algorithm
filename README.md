@@ -13,11 +13,11 @@
 <!-- STATUS:START -->
 <!-- 이 구간은 scripts/status.sh가 자동 생성합니다. 직접 수정하지 마세요. -->
 
-## 📊 공부 현황 — 연속 27일째 🔥🔥🔥 미쳤다
+## 📊 공부 현황 — 연속 28일째 🔥🔥🔥 미쳤다
 
 | 연속 학습(평일) | 총 학습일 | 총 문제 | 최근 학습일 |
 | :---: | :---: | :---: | :---: |
-| **27일** | 27일 | 26개 | 2026-08-12 |
+| **28일** | 28일 | 27개 | 2026-08-13 |
 
 <details>
 <summary>문제종류별 · 최근 기록 펼쳐보기</summary>
@@ -31,21 +31,21 @@
 | JS Methods | 10 |
 | Recursion | 2 |
 | Stack Queue | 1 |
-| Two Pointer | 3 |
+| Two Pointer | 4 |
 
 **최근 기록**
 
 | 날짜 | 주제 | 링크 |
 | --- | --- | --- |
+| 2026-08-13 | LeetCode 167 Two Sum II - Input Array Is Sorted | [리포트](./daily-report/2026-08-13.md) |
 | 2026-08-12 | LeetCode 125 Valid Palindrome | [리포트](./daily-report/2026-08-12.md) |
 | 2026-08-11 | 프로그래머스 42885 구명보트 | [리포트](./daily-report/2026-08-11.md) |
 | 2026-08-10 | 프로그래머스 178870 연속된 부분 수열의 합 | [리포트](./daily-report/2026-08-10.md) |
 | 2026-08-07 | 프로그래머스 12971 스티커 모으기2 | [리포트](./daily-report/2026-08-07.md) |
-| 2026-08-06 | 프로그래머스 42898 등굣길 | [리포트](./daily-report/2026-08-06.md) |
 
 </details>
 
-<sub>🔄 마지막 갱신: 2026-08-12 11:05 · `bash scripts/status.sh`로 갱신</sub>
+<sub>🔄 마지막 갱신: 2026-08-13 11:20 · `bash scripts/status.sh`로 갱신</sub>
 <!-- STATUS:END -->
 
 ## 공부 방식

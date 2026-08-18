@@ -55,21 +55,33 @@ while IFS= read -r dir; do
 done < <(echo "$prob_files" | awk -F/ 'NF>1{print $2}' | sort -u)
 
 # ---- daily-report 날짜 수집 ----
-dates_desc="$(find daily-report -type f -name "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md" 2>/dev/null \
+report_dates_desc="$(find daily-report -type f -name "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md" 2>/dev/null \
   | sed -E 's#.*/([0-9]{4}-[0-9]{2}-[0-9]{2})\.md#\1#' | sort -ru || true)"
+
+# 휴식일은 리포트로 남기되, 학습일·문제 수·최근 학습일에는 포함하지 않는다.
+is_rest_day() {
+  grep -q '<!-- REST_DAY -->' "daily-report/$1.md" 2>/dev/null
+}
+
+dates_desc="$(while IFS= read -r d; do
+  [ -z "$d" ] && continue
+  if ! is_rest_day "$d"; then
+    echo "$d"
+  fi
+done <<< "$report_dates_desc")"
 total_days="$(echo "$dates_desc" | grep -c . || true)"
 
 is_studied() { echo "$dates_desc" | grep -qx "$1"; }
 
 # 연속 학습(streak) 계산: 최근 학습일부터 하루씩 거슬러 올라가며
-# 주말은 건너뛰고, 평일에 기록이 없으면 종료.
+# 주말·기록된 휴식일은 건너뛰고, 평일에 기록이 없으면 종료.
 streak=0
 latest="$(echo "$dates_desc" | head -1)"
 if [ -n "$latest" ]; then
   cur="$latest"
   while true; do
     dow="$(dow_of "$cur")"   # 1=월 .. 7=일
-    if [ "$dow" -ge 6 ]; then
+    if [ "$dow" -ge 6 ] || is_rest_day "$cur"; then
       cur="$(prev_day "$cur")"
       continue
     fi
